@@ -15,7 +15,7 @@ const TimerList = ({ timers, updateTimer, completeTimer }) => {
         <div key={cat} className="timer-category">
           <div className="category-header">
             <h2>{cat}</h2>
-            <div>
+            <div className="category-buttons">
               <button
                 onClick={() =>
                   grouped[cat].forEach((t) =>

@@ -43,18 +43,6 @@ const App = () => {
     }
   };
 
-  const updateGroupTimers = (status) => {
-    setTimers((prev) =>
-      prev.map((timer) => {
-        if (status === "reset") {
-          setHistory(historyPrev => historyPrev.filter(h => h.name !== timer.name));
-          return { ...timer, status: 'Paused', remaining: timer.duration };
-        }
-        return { ...timer, status: status };
-      })
-    );
-  };
-
   return (
     <Router>
       <div className="app-container">
@@ -69,21 +57,7 @@ const App = () => {
             path="/"
             element={
               <>
-                <TimerForm
-                  addTimer={(timer) => setTimers([...timers, timer])}
-                />
-                <div className="group-controls">
-                  <h3>All Groups Timer Controls</h3>
-                  <button onClick={() => updateGroupTimers("Running")}>
-                    Start All
-                  </button>
-                  <button onClick={() => updateGroupTimers("Paused")}>
-                    Pause All
-                  </button>
-                  <button onClick={() => updateGroupTimers("reset")}>
-                    Reset All
-                  </button>
-                </div>
+                <TimerForm addTimer={(timer) => setTimers([...timers, timer])}/>
                 <TimerList timers={timers} updateTimer={updateTimer} completeTimer={completeTimer}/>
               </>
             }
