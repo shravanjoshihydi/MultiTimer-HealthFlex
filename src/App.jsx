@@ -30,7 +30,8 @@ const App = () => {
 
   return (
     <div className="app-container">
-      <h1>Multi Timer Manager</h1>
+      <h1>Timer Application</h1>
+      <h4>Set Timers, Categorise and Track your activities</h4>
       <TimerForm addTimer={timer => setTimers([...timers, timer])} />
       <div className="group-controls">
         <h3>All Groups Timer Controls</h3>
