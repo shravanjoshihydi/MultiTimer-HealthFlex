@@ -1,0 +1,30 @@
+.timer-item {
+    border-top: 1px solid #ddd;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .timer-item .info {
+    flex: 1;
+  }
+  
+  .timer-item .controls button {
+    margin-left: 5px;
+  }
+  
+  .progress-bar {
+    background: #eee;
+    height: 8px;
+    margin-top: 5px;
+  }
+  
+  .progress {
+    background: green;
+    height: 8px;
+    transition: width 1s ease;
+  }
+  .timer-category .controls{
+    display: flex;flex-direction: column; gap: 10px;
+  }

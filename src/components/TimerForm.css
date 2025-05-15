@@ -1,0 +1,11 @@
+.timer-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .timer-form input,
+  .timer-form button {
+    padding: 8px;
+    font-size: 14px;
+  }

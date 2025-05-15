@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import TimerForm from './components/TimerForm';
+import TimerList from './components/TimerList';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [timers, setTimers] = useState([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('timers');
+    if (saved) setTimers(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('timers', JSON.stringify(timers));
+  }, [timers]);
+
+  const updateTimer = (id, newProps) => {
+    setTimers(prev => prev.map(timer => timer.id === id ? { ...timer, ...newProps } : timer));
+  };
+
+  const updateGroupTimers = (status) => {
+    setTimers(prev => prev.map(timer => {
+      if (status === 'reset') {
+        return { ...timer, status: 'Paused', remaining: timer.duration };
+      }
+      return { ...timer, status: status };
+    }));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app-container">
+      <h1>Multi Timer Manager</h1>
+      <TimerForm addTimer={timer => setTimers([...timers, timer])} />
+      <div className="group-controls">
+        <h3>All Groups Timer Controls</h3>
+        <button onClick={() => updateGroupTimers('Running')}>Start All</button>
+        <button onClick={() => updateGroupTimers('Paused')}>Pause All</button>
+        <button onClick={() => updateGroupTimers('reset')}>Reset All</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      <TimerList timers={timers} updateTimer={updateTimer} />
+    </div>
+  );
+};
 
-export default App
+export default App;
