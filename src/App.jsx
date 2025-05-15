@@ -31,7 +31,7 @@ const App = () => {
   return (
     <div className="app-container">
       <h1>Timer Application</h1>
-      <h4>Set Timers, Categorise and Track your activities</h4>
+      <h3>Add Name, Duration, Category and Start your timer now...! </h3>
       <TimerForm addTimer={timer => setTimers([...timers, timer])} />
       <div className="group-controls">
         <h3>All Groups Timer Controls</h3>

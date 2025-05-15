@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TimerItem.css';
+import Congratulations from "./Congratulations";
 
 const TimerItem = ({ timer, updateTimer }) => {
   const [remaining, setRemaining] = useState(timer.remaining ?? timer.duration);
   const [status, setStatus] = useState(timer.status ?? 'Paused');
-  const [alerted, setAlerted] = useState(false);
+  const [activeAlert, setActiveAlert] = useState(false);
+  const [name,setName] = useState("");
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -20,11 +22,12 @@ const TimerItem = ({ timer, updateTimer }) => {
             clearInterval(intervalRef.current);
             setStatus('Completed');
             updateTimer(timer.id, { status: 'Completed', remaining: 0 });
+            setName(timer.name);
+            setActiveAlert(true);
+            setTimeout(()=>{
+                setActiveAlert(false);
+            },3000);
             return 0;
-          }
-          const halfway = Math.floor(timer.duration / 2);
-          if (!alerted && prev - 1 === halfway) {
-            setAlerted(true);
           }
           updateTimer(timer.id, { remaining: prev - 1 });
           return prev - 1;
@@ -48,7 +51,6 @@ const TimerItem = ({ timer, updateTimer }) => {
     if (action === 'reset') {
       setRemaining(timer.duration);
       setStatus('Paused');
-      setAlerted(false);
       updateTimer(timer.id, { status: 'Paused', remaining: timer.duration });
     }
   };
@@ -70,6 +72,7 @@ const TimerItem = ({ timer, updateTimer }) => {
         <button onClick={() => handleAction('pause')}>Pause</button>
         <button onClick={() => handleAction('reset')}>Reset</button>
       </div>
+      {activeAlert && <Congratulations name={name}/>}
     </div>
   );
 };
