@@ -1,46 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import TimerForm from './components/TimerForm';
-import TimerList from './components/TimerList';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import TimerForm from "./components/TimerForm";
+import TimerList from "./components/TimerList";
+import HistoryScreen from "./components/HistoryScreen";
+import "./App.css";
 
 const App = () => {
   const [timers, setTimers] = useState([]);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('timers');
-    if (saved) setTimers(JSON.parse(saved));
+    const savedTimers = localStorage.getItem("timers");
+    const savedHistory = localStorage.getItem("history");
+    if (savedTimers) setTimers(JSON.parse(savedTimers));
+    if (savedHistory) setHistory(JSON.parse(savedHistory));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('timers', JSON.stringify(timers));
+    localStorage.setItem("timers", JSON.stringify(timers));
   }, [timers]);
 
+  useEffect(() => {
+    localStorage.setItem("history", JSON.stringify(history));
+  }, [history]);
+
   const updateTimer = (id, newProps) => {
-    setTimers(prev => prev.map(timer => timer.id === id ? { ...timer, ...newProps } : timer));
+    setTimers((prev) =>
+      prev.map((timer) => (timer.id === id ? { ...timer, ...newProps } : timer))
+    );
+  };
+
+  const completeTimer = (id) => {
+    const timer = timers.find((t) => t.id === id);
+    if (timer) {
+      setHistory(prev => {
+        const exists = prev.some(item => item.name === timer.name);
+        if (exists) return prev;
+        const now = new Date().toLocaleString();
+        const newHistoryItem = { name: timer.name, completedAt: now, category: timer.category };
+        return [...prev, newHistoryItem];
+      });
+    }
   };
 
   const updateGroupTimers = (status) => {
-    setTimers(prev => prev.map(timer => {
-      if (status === 'reset') {
-        return { ...timer, status: 'Paused', remaining: timer.duration };
-      }
-      return { ...timer, status: status };
-    }));
+    setTimers((prev) =>
+      prev.map((timer) => {
+        if (status === "reset") {
+          setHistory(historyPrev => historyPrev.filter(h => h.name !== timer.name));
+          return { ...timer, status: 'Paused', remaining: timer.duration };
+        }
+        return { ...timer, status: status };
+      })
+    );
   };
 
   return (
-    <div className="app-container">
-      <h1 style={{marginBottom:"0"}}>Timer Application</h1>
-      <h3>Add Name, Duration, Category and Start your timer now...! </h3>
-      <TimerForm addTimer={timer => setTimers([...timers, timer])} />
-      <div className="group-controls">
-        <h3>All Groups Timer Controls</h3>
-        <button onClick={() => updateGroupTimers('Running')}>Start All</button>
-        <button onClick={() => updateGroupTimers('Paused')}>Pause All</button>
-        <button onClick={() => updateGroupTimers('reset')}>Reset All</button>
+    <Router>
+      <div className="app-container">
+        <h1 style={{ marginBottom: "0" }}>Timer Application</h1>
+        <h3>Add Name, Duration, Category and Start your timer now...! </h3>
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/history">History</Link>
+        </nav>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <TimerForm
+                  addTimer={(timer) => setTimers([...timers, timer])}
+                />
+                <div className="group-controls">
+                  <h3>All Groups Timer Controls</h3>
+                  <button onClick={() => updateGroupTimers("Running")}>
+                    Start All
+                  </button>
+                  <button onClick={() => updateGroupTimers("Paused")}>
+                    Pause All
+                  </button>
+                  <button onClick={() => updateGroupTimers("reset")}>
+                    Reset All
+                  </button>
+                </div>
+                <TimerList timers={timers} updateTimer={updateTimer} completeTimer={completeTimer}/>
+              </>
+            }
+          />
+          <Route
+            path="/history"
+            element={<HistoryScreen history={history} />}
+          />
+        </Routes>
       </div>
-      <TimerList timers={timers} updateTimer={updateTimer} />
-    </div>
+    </Router>
   );
 };
 

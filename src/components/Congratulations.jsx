@@ -1,5 +1,5 @@
 import React from "react";
-import "./Congratulations.css"
+import "./Congratulations.css";
 const Congratulations = ({ name }) => {
   return (
     <div id="myModal" className="modal">

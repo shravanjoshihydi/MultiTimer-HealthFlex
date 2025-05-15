@@ -6,14 +6,24 @@
   flex-direction: column;
   align-items: center;
 }
-#root{
-  width:100%
+#root {
+  width: 100%;
 }
 h1 {
   text-align: center;
 }
-.group-controls{
+.group-controls {
   display: flex;
   gap: 20px;
   margin: 10px auto;
+}
+nav{
+  display: flex;
+  margin: 10px auto;
+  gap: 10px;
+}
+nav a,nav a:hover{
+  background-color: #000;
+  color:#fff;
+  padding: 10px;
 }
