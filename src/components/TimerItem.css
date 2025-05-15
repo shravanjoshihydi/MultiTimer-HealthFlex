@@ -26,5 +26,7 @@
     transition: width 1s ease;
   }
   .timer-category .controls{
-    display: flex;flex-direction: column; gap: 10px;
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
   }

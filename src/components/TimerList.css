@@ -20,5 +20,8 @@
     padding: 4px 8px;
   }
   .timer-list{
-    display: flex;flex-wrap: wrap;width: 100%; gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%; 
+    gap: 20px;
   }
